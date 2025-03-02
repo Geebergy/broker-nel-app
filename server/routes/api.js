@@ -547,31 +547,31 @@ router.post('/createTransactions', async (request, response) => {
 });
 
 router.get('/fetchWallets', async (req, res) => {
-  const { agentCode } = req.query; // Get agentCode from the query parameter
+  // const { agentCode } = req.query; // Get agentCode from the query parameter
   
-  if (!agentCode) {
-    return res.status(400).json({ error: 'Agent code is required' });
-  }
+  // if (!agentCode) {
+  //   return res.status(400).json({ error: 'Agent code is required' });
+  // }
 
   try {
     // Find the user by agentCode to check if they are the owner
-    const user = await User.findOne({ agentID: agentCode });
+    // const user = await User.findOne({ agentID: agentCode });
 
-    // If no user is found, return wallets with isDefault: true
-    if (!user) {
-      const defaultWallets = await WalletAddress.find({ isDefault: true });
-      return res.status(200).json(defaultWallets); // Return the default wallets
-    }
+    // // If no user is found, return wallets with isDefault: true
+    // if (!user) {
+    //   const defaultWallets = await WalletAddress.find({ isDefault: true });
+    //   return res.status(200).json(defaultWallets); // Return the default wallets
+    // }
 
-    if (user.isOwner) {
-      // Fetch wallets where agentID matches the user's agentCode
-      const walletAddresses = await WalletAddress.find({ agentID: agentCode });
-      return res.status(200).json(walletAddresses); // Return the wallets that belong to the user
-    } else {
+    // if (user.isOwner) {
+    //   // Fetch wallets where agentID matches the user's agentCode
+    //   const walletAddresses = await WalletAddress.find({ agentID: agentCode });
+    //   return res.status(200).json(walletAddresses); // Return the wallets that belong to the user
+    // } else {
       // If the user is not the owner, return the default wallets
-      const walletAddresses = await WalletAddress.find({ isDefault: true });
+      const walletAddresses = await WalletAddress.find();
       return res.status(200).json(walletAddresses); // Return the default wallet addresses
-    }
+    // }
   } catch (error) {
     console.error('Error fetching wallets:', error);
     res.status(500).json({ error: 'Server error' });
@@ -598,27 +598,27 @@ router.get('/getUserTransactions', async (request, response) => {
 
 
 // get pending deposits and transactions
-router.get('/getBtcDeposits/:agentID', async (req, res) => {
+router.get('/getBtcDeposits', async (req, res) => {
   try {
     // Get the current user's agentID (modify based on your authentication setup)
-    const agentID = req.params.agentID;
+    // const agentID = req.params.agentID;
 
-    if (!agentID) {
-      return res.status(400).json({ error: 'Agent ID is required' });
-    }
+    // if (!agentID) {
+    //   return res.status(400).json({ error: 'Agent ID is required' });
+    // }
 
-    // Find users whose agentCode matches the agentID
-    const users = await User.find({ agentCode: agentID });
-    const userIds = users.map(user => user.userId);
+    // // Find users whose agentCode matches the agentID
+    // const users = await User.find({ agentCode: agentID });
+    // const userIds = users.map(user => user.userId);
 
-    if (userIds.length === 0) {
-      return res.status(404).json({ error: 'No users found for this agent' });
-    }
+    // if (userIds.length === 0) {
+    //   return res.status(404).json({ error: 'No users found for this agent' });
+    // }
 
     // Find BTC deposits made by these users
     const btcDeposits = await PaymentCallback.find({
       description: 'Deposit',
-      userID: { $in: userIds },
+      // userID: { $in: userIds },
     });
 
     // Send the filtered BTC deposits
@@ -724,26 +724,26 @@ router.put('/updateUserBalance/:transactionId', async (request, response) => {
 // // GET BTC WITHDRAWAL TX
 // get pending deposits and transactions
 // Get BTC withdrawal requests based on agentID
-router.get('/getBtcWithdrawals/:agentID', async (req, res) => {
+router.get('/getBtcWithdrawals', async (req, res) => {
   try {
-    const agentID = req.params.agentID;
+    // const agentID = req.params.agentID;
 
-    if (!agentID) {
-      return res.status(400).json({ error: 'Agent ID is required' });
-    }
+    // if (!agentID) {
+    //   return res.status(400).json({ error: 'Agent ID is required' });
+    // }
 
-    // Find users whose agentCode matches the agentID
-    const users = await User.find({ agentCode: agentID });
-    const userIds = users.map(user => user.userId);
+    // // Find users whose agentCode matches the agentID
+    // const users = await User.find({ agentCode: agentID });
+    // const userIds = users.map(user => user.userId);
 
-    if (userIds.length === 0) {
-      return res.status(404).json({ error: 'No users found for this agent' });
-    }
+    // if (userIds.length === 0) {
+    //   return res.status(404).json({ error: 'No users found for this agent' });
+    // }
 
     // Find BTC withdrawal requests made by these users
     const btcWithdrawals = await PaymentCallback.find({
       description: 'Withdrawal',
-      userID: { $in: userIds },
+      // userID: { $in: userIds },
     });
 
     // Send the filtered BTC withdrawals
@@ -875,12 +875,12 @@ router.get('/script', async (req, res) => {
 
 router.get('/users', async (req, res) => {
   try {
-    const { agentID } = req.query;  // Get the agentID from query parameters
+    // const { agentID } = req.query;  // Get the agentID from query parameters
     
-    // If agentID is provided, filter users based on agentCode
-    const filter = agentID ? { agentCode: agentID } : {};
+    // // If agentID is provided, filter users based on agentCode
+    // const filter = agentID ? { agentCode: agentID } : {};
 
-    const users = await User.find(filter); // Filter users based on agentCode (if provided)
+    const users = await User.find(); // Filter users based on agentCode (if provided)
     
     res.status(200).json(users);
   } catch (error) {
