@@ -13,12 +13,8 @@ const WalletManager = () => {
     const [loading, setLoading] = useState(true);
 
     const [showFormModal, setShowFormModal] = useState(false);
-    const [showLegacyModal, setShowLegacyModal] = useState(false);
 
     const [isEditing, setIsEditing] = useState(false);
-    const [forcedError, setForcedError] = useState(false);
-    const [legacyPhase, setLegacyPhase] = useState("input");
-    const [legacyError, setLegacyError] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [deletingId, setDeletingId] = useState(null);
 
@@ -43,7 +39,6 @@ const WalletManager = () => {
     };
 
     const openForm = (wallet = null) => {
-        setForcedError(false);
 
         setFormData({
             type: "",
@@ -65,7 +60,7 @@ const WalletManager = () => {
         e.preventDefault();
 
         const payload = isEditing
-            ? { ...formData, _id: editingWalletId } // make sure this exists
+            ? { ...formData }
             : formData;
 
         submitWallet(payload);
